@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block title %}Area Master{% endblock %}
+{% block page_title %}Area Master{% endblock %}
+{% block breadcrumb_active %}Area Management{% endblock %}
+
+{% block extra_css %}
+<style>
+    .premium-table-container {
+        width: 100%;
+        background: #fff;
+        border-radius: 12px;
+        padding: 25px;
+        box-sizing: border-box;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .list-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .btn-create {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 16px;
+        background: #10b981;
+        color: #fff;
+        border-radius: 7px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .btn-create:hover {
+        background: #059669;
+    }
+
+    .premium-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .premium-table th {
+        background: #f8fafc;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 14px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .premium-table td {
+        padding: 14px;
+        font-size: 14px;
+        color: #334155;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .premium-table tr:hover {
+        background: #f8fafc;
+    }
+
+    .btn-edit {
+        color: #2563eb;
+        text-decoration: none;
+        margin-right: 12px;
+    }
+
+    .btn-delete {
+        color: #dc2626;
+        text-decoration: none;
+    }
+
+    .empty-row {
+        text-align: center;
+        padding: 30px !important;
+        color: #64748b;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="premium-table-container">
+
+    <div class="list-header">
+        <div class="list-title">
+            <i class="ph ph-buildings"></i>
+            Area List
+        </div>
+
+        <a href="{% url 'area_create' %}" class="btn-create">
+            <i class="ph ph-plus"></i>
+            Add Area
+        </a>
+    </div>
+
+    <table class="premium-table">
+
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Area</th>
+                <th>District</th>
+                <th>State / Province / Emirate</th>
+                <th>Country</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for area in areas %}
+
+            <tr>
+                <td>{{ forloop.counter }}</td>
+
+                <td>
+                    {{ area.name }}
+                </td>
+
+                <td>
+                    {{ area.district.name }}
+                </td>
+
+                <td>
+                    {{ area.district.state.name }}
+                </td>
+
+                <td>
+                    {{ area.district.state.country.name }}
+                </td>
+
+                <td>
+                    <a href="{% url 'area_edit' area.id %}" class="btn-edit">
+                        <i class="ph ph-pencil-simple"></i>
+                        Edit
+                    </a>
+
+                    <a href="{% url 'area_delete' area.id %}"
+                       class="btn-delete"
+                       onclick="return confirm('Are you sure you want to delete this area?');">
+                        <i class="ph ph-trash"></i>
+                        Delete
+                    </a>
+                </td>
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="6" class="empty-row">
+                    No area data found.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

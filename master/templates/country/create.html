@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Country{% endblock %}
+{% block page_title %}Create Country{% endblock %}
+{% block breadcrumb_active %}Create Country{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+    .premium-form-container {
+        width: 100%;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        padding: 30px;
+        box-sizing: border-box;
+    }
+
+    .premium-form-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        font-size: 20px;
+        font-weight: 600;
+        color: #1e293b;
+
+        padding-bottom: 20px;
+        margin-bottom: 25px;
+
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+        max-width: 750px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+
+        color: #334155;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .form-control {
+        width: 100%;
+        height: 48px;
+
+        padding: 11px 14px;
+
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+
+        background: #ffffff;
+        color: #334155;
+
+        font-size: 14px;
+
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        border-color: #3b82f6;
+
+        box-shadow:
+            0 0 0 3px rgba(59,130,246,0.10);
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 7px;
+
+        background: #3b82f6;
+        color: #ffffff;
+
+        padding: 11px 24px;
+
+        border: none;
+        border-radius: 8px;
+
+        font-size: 14px;
+        font-weight: 600;
+
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background: #2563eb;
+    }
+
+</style>
+
+
+<div class="premium-form-container">
+
+    <div class="premium-form-title">
+
+        <i class="ph ph-globe"></i>
+
+        Create Country
+
+    </div>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <!-- Country Name -->
+        <div class="form-group">
+
+            <label for="{{ form.name.id_for_label }}">
+                Country Name
+            </label>
+
+            {{ form.name }}
+
+            {% if form.name.errors %}
+                <div style="color:#dc2626; font-size:13px;">
+                    {{ form.name.errors }}
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        <!-- Currency Code -->
+        <div class="form-group">
+
+            <label for="{{ form.currency_code.id_for_label }}">
+                Currency Code
+            </label>
+
+            {{ form.currency_code }}
+
+            {% if form.currency_code.errors %}
+                <div style="color:#dc2626; font-size:13px;">
+                    {{ form.currency_code.errors }}
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        <!-- Currency Symbol -->
+        <div class="form-group">
+
+            <label for="{{ form.currency_symbol.id_for_label }}">
+                Currency Symbol / Emblem
+            </label>
+
+            {{ form.currency_symbol }}
+
+            {% if form.currency_symbol.errors %}
+                <div style="color:#dc2626; font-size:13px;">
+                    {{ form.currency_symbol.errors }}
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        <!-- Button -->
+        <button type="submit" class="btn-primary">
+
+            <i class="ph ph-check"></i>
+
+            Save Country
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

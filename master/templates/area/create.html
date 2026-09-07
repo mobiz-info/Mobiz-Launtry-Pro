@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Area{% endblock %}
+{% block page_title %}Create Area{% endblock %}
+{% block breadcrumb_active %}Create Area{% endblock %}
+
+{% block content %}
+
+<style>
+    .area-form {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        padding: 30px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .area-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1e293b;
+        padding-bottom: 20px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .area-group {
+        margin-bottom: 22px;
+        max-width: 750px;
+    }
+
+    .area-label {
+        display: block;
+        margin-bottom: 8px;
+        color: #334155;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .area-input {
+        width: 100%;
+        height: 48px;
+        padding: 11px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #334155;
+        font-size: 14px;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    .area-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59,130,246,0.10);
+    }
+
+    .area-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    .area-save {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 11px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .area-cancel {
+        background: #f1f5f9;
+        color: #475569;
+        padding: 11px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .area-error {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+</style>
+
+
+<div class="area-form">
+
+    <div class="area-title">
+        <i class="ph ph-map-pin-line"
+           style="color:#3b82f6; margin-right:8px;"></i>
+        Create Area
+    </div>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <div class="area-group">
+
+            <label class="area-label">
+                District
+            </label>
+
+            {{ form.district }}
+
+            {% if form.district.errors %}
+                <div class="area-error">
+                    {{ form.district.errors }}
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        <div class="area-group">
+
+            <label class="area-label">
+                Area Name
+            </label>
+
+            {{ form.name }}
+
+            {% if form.name.errors %}
+                <div class="area-error">
+                    {{ form.name.errors }}
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        <div class="area-actions">
+
+            <a href="{% url 'area_list' %}" class="area-cancel">
+                Cancel
+            </a>
+
+            <button type="submit" class="area-save">
+                <i class="ph ph-check"></i>
+                Save Area
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

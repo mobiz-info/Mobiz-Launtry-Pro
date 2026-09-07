@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Add District{% endblock %}
+{% block page_title %}Add District{% endblock %}
+{% block breadcrumb_active %}Add District{% endblock %}
+
+{% block extra_css %}
+
+<style>
+    .form-container {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+
+    .form-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .form-header h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .form-body {
+        padding: 28px 24px;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+        max-width: 600px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        color: #334155;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 11px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        outline: none;
+        background: white;
+        color: #334155;
+        font-size: 0.9rem;
+    }
+
+    .form-control:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+    }
+
+    .error-message {
+        color: #dc2626;
+        font-size: 0.8rem;
+        margin-top: 6px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 28px;
+    }
+
+    .btn-save {
+        background: #3b82f6;
+        color: white;
+        padding: 10px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        cursor: pointer;
+    }
+
+    .btn-save:hover {
+        background: #2563eb;
+    }
+
+    .btn-cancel {
+        background: #f1f5f9;
+        color: #475569;
+        padding: 10px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <div class="form-header">
+        <h3>District Information</h3>
+    </div>
+
+    <div class="form-body">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    State / Province / Emirate
+                </label>
+
+                {{ form.state }}
+
+                {% if form.state.errors %}
+                    <div class="error-message">
+                        {{ form.state.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    District Name
+                </label>
+
+                {{ form.name }}
+
+                {% if form.name.errors %}
+                    <div class="error-message">
+                        {{ form.name.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="form-actions">
+
+                <button type="submit" class="btn-save">
+                    <i class="ph ph-check"></i>
+                    Save District
+                </button>
+
+                <a href="{% url 'district_list' %}" class="btn-cancel">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

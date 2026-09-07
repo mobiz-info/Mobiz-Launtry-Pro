@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Country Master Classification - Mobiz Autocare Pro{% endblock %}
+{% block page_title %}Country Master{% endblock %}
+{% block breadcrumb_active %}Country Management{% endblock %}
+
+{% block content %}
+
+<div class="list-container">
+
+    <!-- Header -->
+    <div class="list-header">
+
+        <form method="GET" class="search-wrapper">
+            <i class="ph ph-magnifying-glass search-icon"></i>
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search countries..."
+                class="search-input"
+            >
+
+            <button type="submit" style="display: none;"></button>
+        </form>
+
+        <a href="{% url 'country_create' %}" class="btn-create">
+            <i class="ph-bold ph-plus"></i>
+            Add Country
+        </a>
+
+    </div>
+
+    <!-- Table -->
+    <div style="overflow-x: auto;">
+
+        <table class="premium-table">
+
+            <thead>
+                <tr>
+                    <th style="width: 80px;">#</th>
+                    <th>Country Name</th>
+                    <th>Currency Code</th>
+                    <th>Emblem</th>
+                    <th style="width: 120px; text-align: right;">Action</th>
+                </tr>
+            </thead>
+
+           <tbody>
+    {% for country in countries %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+
+        <td>
+            <div class="country-name">
+                <span class="country-icon">
+                    <i class="ph ph-flag"></i>
+                </span>
+                <strong>{{ country.name }}</strong>
+            </div>
+        </td>
+
+        <td>
+            {{ country.currency_code|default:"-" }}
+        </td>
+
+        <td>
+            <strong>{{ country.currency_symbol|default:"-" }}</strong>
+        </td>
+
+        <td>
+            <a href="{% url 'country_edit' country.id %}" class="action-btn">
+                <i class="ph ph-pencil-simple"></i>
+            </a>
+
+            <form method="POST"
+                  action="{% url 'country_delete' country.id %}"
+                  style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="action-btn delete-btn"
+                        onclick="return confirm('Are you sure you want to delete this country?');">
+                    <i class="ph ph-trash"></i>
+                </button>
+            </form>
+        </td>
+    </tr>
+
+    {% empty %}
+    <tr>
+        <td colspan="5" style="text-align:center; padding:40px;">
+            No countries found.
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+        </table>
+
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.paginator.num_pages > 1 %}
+
+    <div class="pagination">
+
+        {% if page_obj.has_previous %}
+
+            <a
+                href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}"
+                class="page-link"
+            >
+                Previous
+            </a>
+
+        {% endif %}
+
+        <span style="font-weight: 500;">
+            Page
+            <span style="color: #1e293b;">
+                {{ page_obj.number }}
+            </span>
+            of
+            {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+
+            <a
+                href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}"
+                class="page-link"
+            >
+                Next
+            </a>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
