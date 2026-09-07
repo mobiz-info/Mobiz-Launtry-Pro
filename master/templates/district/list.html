@@ -1,116 +1,217 @@
 {% extends 'base.html' %}
 
 {% block title %}District{% endblock %}
+
 {% block page_title %}District{% endblock %}
+
 {% block breadcrumb_active %}District{% endblock %}
 
 {% block extra_css %}
-
 <style>
     .list-container {
         background: #ffffff;
         border-radius: 12px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     .list-header {
-        padding: 20px 24px;
-        border-bottom: 1px solid #e2e8f0;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 20px;
+        gap: 15px;
     }
 
     .list-title {
-        font-size: 1rem;
+        font-size: 20px;
         font-weight: 600;
         color: #1e293b;
+        margin: 0;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .search-box {
+        padding: 9px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 7px;
+        font-size: 14px;
+        outline: none;
+        min-width: 220px;
+    }
+
+    .search-box:focus {
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.1);
     }
 
     .btn-create {
-        background: #10b981;
-        color: white;
-        padding: 10px 18px;
-        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 16px;
+        background: #11a979;
+        color: #ffffff;
         text-decoration: none;
-        font-size: 0.9rem;
+        border-radius: 7px;
+        font-size: 14px;
         font-weight: 500;
+        transition: 0.2s;
     }
 
     .btn-create:hover {
-        background: #059669;
+        background: #6d28d9;
+        color: #ffffff;
     }
 
     .table-wrapper {
+        width: 100%;
         overflow-x: auto;
     }
 
-    .premium-table {
+    .district-table {
         width: 100%;
         border-collapse: collapse;
     }
 
-    .premium-table th {
+    .district-table thead {
         background: #f8fafc;
-        color: #475569;
-        font-size: 0.8rem;
-        font-weight: 600;
+    }
+
+    .district-table th {
+        padding: 13px 15px;
         text-align: left;
-        padding: 14px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
         border-bottom: 1px solid #e2e8f0;
     }
 
-    .premium-table td {
-        padding: 14px 20px;
+    .district-table td {
+        padding: 14px 15px;
+        font-size: 14px;
         color: #334155;
-        font-size: 0.9rem;
         border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
     }
 
-    .premium-table tr:hover {
+    .district-table tbody tr:hover {
         background: #f8fafc;
+    }
+
+    .district-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        color: #1e293b;
+    }
+
+    .district-icon {
+        width: 34px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #ede9fe;
+        color: #7c3aed;
+        border-radius: 8px;
+        font-size: 17px;
+    }
+
+    .state-name {
+        font-weight: 500;
+        color: #475569;
     }
 
     .action-buttons {
         display: flex;
+        align-items: center;
         gap: 8px;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 7px 11px;
+        border-radius: 6px;
+        font-size: 13px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
     }
 
     .btn-edit {
         background: #eff6ff;
         color: #2563eb;
-        padding: 7px 12px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-size: 0.8rem;
     }
 
     .btn-edit:hover {
         background: #dbeafe;
+        color: #1d4ed8;
     }
 
     .btn-delete {
         background: #fef2f2;
         color: #dc2626;
-        padding: 7px 12px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-size: 0.8rem;
     }
 
     .btn-delete:hover {
         background: #fee2e2;
+        color: #b91c1c;
     }
 
     .empty-message {
         text-align: center;
         padding: 40px 20px;
         color: #64748b;
+        font-size: 14px;
+    }
+
+    .empty-message i {
+        display: block;
+        font-size: 42px;
+        margin-bottom: 10px;
+        color: #94a3b8;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        margin-top: 20px;
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: 7px 11px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        color: #475569;
+        background: #ffffff;
+    }
+
+    .pagination a:hover {
+        background: #f8fafc;
+    }
+
+    .pagination .active {
+        background: #7c3aed;
+        color: #ffffff;
+        border-color: #7c3aed;
     }
 </style>
-
 {% endblock %}
 
 
@@ -120,32 +221,41 @@
 
     <div class="list-header">
 
-        <div class="list-title">
+        <h2 class="list-title">
             District List
-        </div>
+        </h2>
 
-        <a href="{% url 'district_create' %}" class="btn-create">
-            <i class="ph ph-plus"></i>
-            Add District
-        </a>
+        <div class="header-actions">
+
+            <input
+                type="text"
+                id="districtSearch"
+                class="search-box"
+                placeholder="Search district..."
+            >
+
+            <a href="{% url 'district_create' %}" class="btn-create">
+                <i class="ph ph-plus"></i>
+                Add District
+            </a>
+
+        </div>
 
     </div>
 
 
     <div class="table-wrapper">
 
-        <table class="premium-table">
+        <table class="district-table" id="districtTable">
 
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Country</th>
+                    <th style="width: 70px;">#</th>
+                    <th>District Name</th>
                     <th>State / Province / Emirate</th>
-                    <th>District</th>
-                    <th>Actions</th>
+                    <th style="width: 180px;">Actions</th>
                 </tr>
             </thead>
-
 
             <tbody>
 
@@ -158,38 +268,54 @@
                     </td>
 
                     <td>
-                        {{ district.state.country.name }}
+                        <div class="district-name">
+
+                            <span class="district-icon">
+                                <i class="ph ph-map-pin"></i>
+                            </span>
+
+                            {{ district.name }}
+
+                        </div>
                     </td>
 
                     <td>
-                        {{ district.state.name }}
-                    </td>
-
-                    <td>
-                        {{ district.name }}
+                        <span class="state-name">
+                            {{ district.state.name }}
+                        </span>
                     </td>
 
                     <td>
 
                         <div class="action-buttons">
 
-                            <a href="{% url 'district_edit' district.id %}"
-                               class="btn-edit">
-
+                            <a
+                                href="{% url 'district_edit' district.id %}"
+                                class="btn-edit"
+                            >
                                 <i class="ph ph-pencil"></i>
                                 Edit
-
                             </a>
 
 
-                            <a href="{% url 'district_delete' district.id %}"
-                               class="btn-delete"
-                               onclick="return confirm('Are you sure you want to delete this district?');">
+                            <form
+                                method="POST"
+                                action="{% url 'district_delete' district.id %}"
+                                style="display: inline;"
+                            >
 
-                                <i class="ph ph-trash"></i>
-                                Delete
+                                {% csrf_token %}
 
-                            </a>
+                                <button
+                                    type="submit"
+                                    class="btn-delete"
+                                    onclick="return confirm('Are you sure you want to delete this district?');"
+                                >
+                                    <i class="ph ph-trash"></i>
+                                    Delete
+                                </button>
+
+                            </form>
 
                         </div>
 
@@ -200,9 +326,19 @@
                 {% empty %}
 
                 <tr>
-                    <td colspan="5" class="empty-message">
-                        No districts found.
+
+                    <td colspan="4">
+
+                        <div class="empty-message">
+
+                            <i class="ph ph-map-pin"></i>
+
+                            No districts found.
+
+                        </div>
+
                     </td>
+
                 </tr>
 
                 {% endfor %}
@@ -213,6 +349,85 @@
 
     </div>
 
+
+    {% if page_obj and page_obj.paginator.num_pages > 1 %}
+
+    <div class="pagination">
+
+        {% if page_obj.has_previous %}
+
+            <a href="?page={{ page_obj.previous_page_number }}">
+                Previous
+            </a>
+
+        {% endif %}
+
+
+        {% for num in page_obj.paginator.page_range %}
+
+            {% if page_obj.number == num %}
+
+                <span class="active">
+                    {{ num }}
+                </span>
+
+            {% else %}
+
+                <a href="?page={{ num }}">
+                    {{ num }}
+                </a>
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        {% if page_obj.has_next %}
+
+            <a href="?page={{ page_obj.next_page_number }}">
+                Next
+            </a>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const searchInput = document.getElementById('districtSearch');
+        const table = document.getElementById('districtTable');
+
+        if (!searchInput || !table) {
+            return;
+        }
+
+        searchInput.addEventListener('keyup', function () {
+
+            const searchValue = this.value.toLowerCase();
+
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(function (row) {
+
+                const rowText = row.textContent.toLowerCase();
+
+                if (rowText.includes(searchValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+
+            });
+
+        });
+
+    });
+</script>
 
 {% endblock %}

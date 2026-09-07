@@ -1,8 +1,164 @@
 {% extends 'base.html' %}
 
-{% block title %}Country Master Classification - Mobiz Autocare Pro{% endblock %}
+{% block title %}Country Master{% endblock %}
 {% block page_title %}Country Master{% endblock %}
 {% block breadcrumb_active %}Country Management{% endblock %}
+
+{% block extra_css %}
+
+<style>
+    .list-container {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .list-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .list-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .btn-create {
+        background: #10b981;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .btn-create:hover {
+        background: #059669;
+    }
+
+    .search-wrapper {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .search-input {
+        width: 260px;
+        padding: 9px 12px 9px 36px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        outline: none;
+        font-size: 0.9rem;
+    }
+
+    .search-input:focus {
+        border-color: #94a3b8;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 12px;
+        color: #64748b;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .premium-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .premium-table th {
+        background: #f8fafc;
+        color: #475569;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-align: left;
+        padding: 14px 20px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .premium-table td {
+        padding: 14px 20px;
+        color: #334155;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .premium-table tr:hover {
+        background: #f8fafc;
+    }
+
+    .country-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .country-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f5f9;
+        border-radius: 6px;
+        color: #475569;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-edit {
+        background: #eff6ff;
+        color: #2563eb;
+        padding: 7px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.8rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-edit:hover {
+        background: #dbeafe;
+    }
+
+    .btn-delete {
+        background: #fef2f2;
+        color: #dc2626;
+        padding: 7px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.8rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-delete:hover {
+        background: #fee2e2;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 40px 20px;
+        color: #64748b;
+    }
+</style>
+
+{% endblock %}
+
 
 {% block content %}
 
@@ -12,6 +168,7 @@
     <div class="list-header">
 
         <form method="GET" class="search-wrapper">
+
             <i class="ph ph-magnifying-glass search-icon"></i>
 
             <input
@@ -23,114 +180,207 @@
             >
 
             <button type="submit" style="display: none;"></button>
+
         </form>
 
+
         <a href="{% url 'country_create' %}" class="btn-create">
-            <i class="ph-bold ph-plus"></i>
+
+            <i class="ph ph-plus"></i>
+
             Add Country
+
         </a>
 
     </div>
 
+
     <!-- Table -->
-    <div style="overflow-x: auto;">
+    <div class="table-wrapper">
 
         <table class="premium-table">
 
             <thead>
+
                 <tr>
-                    <th style="width: 80px;">#</th>
-                    <th>Country Name</th>
-                    <th>Currency Code</th>
-                    <th>Emblem</th>
-                    <th style="width: 120px; text-align: right;">Action</th>
+
+                    <th style="width: 80px;">
+                        #
+                    </th>
+
+                    <th>
+                        Country Name
+                    </th>
+
+                    <th>
+                        Currency Code
+                    </th>
+
+                    <th>
+                        Emblem
+                    </th>
+
+                    <th style="width: 180px;">
+                        Actions
+                    </th>
+
                 </tr>
+
             </thead>
 
-           <tbody>
-    {% for country in countries %}
-    <tr>
-        <td>{{ forloop.counter }}</td>
 
-        <td>
-            <div class="country-name">
-                <span class="country-icon">
-                    <i class="ph ph-flag"></i>
-                </span>
-                <strong>{{ country.name }}</strong>
-            </div>
-        </td>
+            <tbody>
 
-        <td>
-            {{ country.currency_code|default:"-" }}
-        </td>
+                {% for country in countries %}
 
-        <td>
-            <strong>{{ country.currency_symbol|default:"-" }}</strong>
-        </td>
+                <tr>
 
-        <td>
-            <a href="{% url 'country_edit' country.id %}" class="action-btn">
-                <i class="ph ph-pencil-simple"></i>
-            </a>
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
 
-            <form method="POST"
-                  action="{% url 'country_delete' country.id %}"
-                  style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="action-btn delete-btn"
-                        onclick="return confirm('Are you sure you want to delete this country?');">
-                    <i class="ph ph-trash"></i>
-                </button>
-            </form>
-        </td>
-    </tr>
 
-    {% empty %}
-    <tr>
-        <td colspan="5" style="text-align:center; padding:40px;">
-            No countries found.
-        </td>
-    </tr>
-    {% endfor %}
-</tbody>
+                    <td>
+
+                        <div class="country-name">
+
+                            <span class="country-icon">
+                                <i class="ph ph-flag"></i>
+                            </span>
+
+                            <strong>
+                                {{ country.name }}
+                            </strong>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+                        {{ country.currency_code|default:"-" }}
+                    </td>
+
+
+                    <td>
+                        <strong>
+                            {{ country.currency_symbol|default:"-" }}
+                        </strong>
+                    </td>
+
+
+                    <!-- Edit / Delete -->
+                    <td>
+
+                        <div class="action-buttons">
+
+                            <!-- Edit -->
+                            <a
+                                href="{% url 'country_edit' country.id %}"
+                                class="btn-edit"
+                            >
+
+                                <i class="ph ph-pencil"></i>
+
+                                Edit
+
+                            </a>
+
+
+                            <!-- Delete -->
+                            <form
+                                method="POST"
+                                action="{% url 'country_delete' country.id %}"
+                                style="display: inline;"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="btn-delete"
+                                    onclick="return confirm('Are you sure you want to delete this country?');"
+                                >
+
+                                    <i class="ph ph-trash"></i>
+
+                                    Delete
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="empty-message"
+                    >
+
+                        No countries found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
         </table>
 
     </div>
 
+
     <!-- Pagination -->
-    {% if page_obj.paginator.num_pages > 1 %}
+    {% if page_obj and page_obj.paginator.num_pages > 1 %}
 
     <div class="pagination">
 
         {% if page_obj.has_previous %}
 
-            <a
-                href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}"
-                class="page-link"
-            >
-                Previous
-            </a>
+        <a
+            href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}"
+            class="page-link"
+        >
+            Previous
+        </a>
 
         {% endif %}
 
+
         <span style="font-weight: 500;">
+
             Page
+
             <span style="color: #1e293b;">
                 {{ page_obj.number }}
             </span>
+
             of
+
             {{ page_obj.paginator.num_pages }}
+
         </span>
+
 
         {% if page_obj.has_next %}
 
-            <a
-                href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}"
-                class="page-link"
-            >
-                Next
-            </a>
+        <a
+            href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}"
+            class="page-link"
+        >
+            Next
+        </a>
 
         {% endif %}
 
