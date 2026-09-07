@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Order #{{ order.order_number }} - Mobiz Laundry{% endblock %}
+
+{% block content %}
+<div class="header">
+  <div>
+    <h1 class="header-title">Order #{{ order.order_number }}</h1>
+    <p class="header-sub">Created on {{ order.created_at|date:"F d, Y \a\t H:i" }}</p>
+  </div>
+  <div>
+    <a href="{% url 'orders_list' %}" class="btn btn-secondary">
+      <i class="bi bi-arrow-left"></i> Back to Orders
+    </a>
+  </div>
+</div>
+
+<div class="grid-2" style="margin-bottom: 2rem;">
+  <!-- Order Status & Customer Summary -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <h2 class="card-title">Customer Information</h2>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <div>
+        <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Customer Name</span>
+        <strong style="font-size: 1.1rem;">{{ order.customer.name }}</strong>
+      </div>
+      <div>
+        <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Phone Number</span>
+        <span>{{ order.customer.phone }}</span>
+      </div>
+      {% if order.customer.email %}
+      <div>
+        <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Email</span>
+        <span>{{ order.customer.email }}</span>
+      </div>
+      {% endif %}
+      {% if order.customer.address %}
+      <div>
+        <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Delivery Address</span>
+        <span>{{ order.customer.address }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Update Status Form -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <h2 class="card-title">Order & Payment Status</h2>
+    </div>
+    <form method="POST">
+      {% csrf_token %}
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Order Workflow Status</label>
+        <select name="status" class="form-select">
+          <option value="PENDING" {% if order.status == 'PENDING' %}selected{% endif %}>Pending</option>
+          <option value="IN_PROGRESS" {% if order.status == 'IN_PROGRESS' %}selected{% endif %}>In Progress</option>
+          <option value="READY" {% if order.status == 'READY' %}selected{% endif %}>Ready for Pickup</option>
+          <option value="DELIVERED" {% if order.status == 'DELIVERED' %}selected{% endif %}>Delivered</option>
+          <option value="CANCELLED" {% if order.status == 'CANCELLED' %}selected{% endif %}>Cancelled</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Payment Status</label>
+        <select name="payment_status" class="form-select">
+          <option value="UNPAID" {% if order.payment_status == 'UNPAID' %}selected{% endif %}>Unpaid</option>
+          <option value="PAID" {% if order.payment_status == 'PAID' %}selected{% endif %}>Paid</option>
+          <option value="PARTIAL" {% if order.payment_status == 'PARTIAL' %}selected{% endif %}>Partially Paid</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%;">
+        <i class="bi bi-save"></i> Save Status Updates
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Order Items List -->
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Order Items</h2>
+  </div>
+
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Service Name</th>
+          <th>Category</th>
+          <th>Rate</th>
+          <th>Quantity</th>
+          <th style="text-align: right;">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order.items.all %}
+        <tr>
+          <td style="font-weight: 500;">{{ item.service.name }}</td>
+          <td style="color: var(--text-muted);">{{ item.service.get_category_display }}</td>
+          <td>${{ item.unit_price }} / {{ item.service.unit }}</td>
+          <td>{{ item.quantity }} {{ item.service.unit }}</td>
+          <td style="text-align: right; font-weight: 600;">${{ item.subtotal }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4" style="text-align: right; font-weight: 700; font-size: 1.1rem; border-bottom: none;">Total Amount:</td>
+          <td style="text-align: right; font-weight: 700; font-size: 1.25rem; color: #a5b4fc; border-bottom: none;">${{ order.total_amount }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+{% if order.notes %}
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Notes / Special Instructions</h2>
+  </div>
+  <p style="color: var(--text-muted); line-height: 1.6;">{{ order.notes }}</p>
+</div>
+{% endif %}
+
+{% endblock %}

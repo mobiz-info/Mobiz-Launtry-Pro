@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Customers - Mobiz Laundry{% endblock %}
+
+{% block content %}
+<div class="header">
+  <div>
+    <h1 class="header-title">Customer Directory</h1>
+    <p class="header-sub">Manage customer accounts and order history.</p>
+  </div>
+  <button class="btn btn-primary" onclick="toggleCustomerForm()">
+    <i class="bi bi-person-plus"></i> Add Customer
+  </button>
+</div>
+
+<!-- Add Customer Collapsible Form -->
+<div id="createCustomerCard" class="card" style="display: none; border-color: var(--border-glow);">
+  <div class="card-header">
+    <h2 class="card-title"><i class="bi bi-person-badge"></i> Register New Customer</h2>
+    <button class="btn btn-secondary" onclick="toggleCustomerForm()" style="padding: 0.3rem 0.6rem;">Close</button>
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="grid-2" style="margin-bottom: 1.25rem;">
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Full Name *</label>
+        <input type="text" name="name" class="form-control" placeholder="e.g. Muhammed Anshid" required>
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Phone Number *</label>
+        <input type="text" name="phone" class="form-control" placeholder="e.g. +971 50 123 4567" required>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 1.25rem;">
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Email Address</label>
+        <input type="email" name="email" class="form-control" placeholder="e.g. customer@example.com">
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Delivery Address</label>
+        <input type="text" name="address" class="form-control" placeholder="e.g. Villa 12, Street 4, Dubai">
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+      <button type="button" class="btn btn-secondary" onclick="toggleCustomerForm()">Cancel</button>
+      <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Register Customer</button>
+    </div>
+  </form>
+</div>
+
+<!-- Customers Table -->
+<div class="card">
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Customer Name</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Total Orders</th>
+          <th>Registered Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for customer in customers %}
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div class="avatar" style="width: 34px; height: 34px; font-size: 0.85rem;">{{ customer.name|slice:":2"|upper }}</div>
+              <span style="font-weight: 600;">{{ customer.name }}</span>
+            </div>
+          </td>
+          <td style="font-weight: 500;">{{ customer.phone }}</td>
+          <td style="color: var(--text-muted);">{% if customer.email %}{{ customer.email }}{% else %}-{% endif %}</td>
+          <td style="color: var(--text-muted);">{% if customer.address %}{{ customer.address }}{% else %}-{% endif %}</td>
+          <td><span class="badge badge-IN_PROGRESS">{{ customer.order_count }} orders</span></td>
+          <td style="color: var(--text-muted); font-size: 0.85rem;">{{ customer.created_at|date:"M d, Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+            No customers registered yet. Click "Add Customer" to add one!
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleCustomerForm() {
+  const card = document.getElementById('createCustomerCard');
+  card.style.display = card.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

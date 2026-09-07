@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Services - Mobiz Laundry{% endblock %}
+
+{% block content %}
+<div class="header">
+  <div>
+    <h1 class="header-title">Laundry Services Catalog</h1>
+    <p class="header-sub">Manage price list, cleaning categories, and units.</p>
+  </div>
+  <button class="btn btn-primary" onclick="toggleServiceForm()">
+    <i class="bi bi-plus-lg"></i> Add Service
+  </button>
+</div>
+
+<!-- Add Service Collapsible Form -->
+<div id="createServiceCard" class="card" style="display: none; border-color: var(--border-glow);">
+  <div class="card-header">
+    <h2 class="card-title"><i class="bi bi-tag"></i> Add New Laundry Service</h2>
+    <button class="btn btn-secondary" onclick="toggleServiceForm()" style="padding: 0.3rem 0.6rem;">Close</button>
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="grid-2" style="margin-bottom: 1.25rem;">
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Service Name *</label>
+        <input type="text" name="name" class="form-control" placeholder="e.g. Executive Suit Dry Clean" required>
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Category</label>
+        <select name="category" class="form-select">
+          <option value="WASH_FOLD">Wash & Fold</option>
+          <option value="WASH_IRON">Wash & Iron</option>
+          <option value="DRY_CLEAN">Dry Cleaning</option>
+          <option value="IRON_ONLY">Ironing Only</option>
+          <option value="EXPRESS">Express Care</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 1.25rem;">
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Price per Unit ($) *</label>
+        <input type="number" step="0.01" min="0" name="price_per_unit" class="form-control" placeholder="e.g. 4.50" required>
+      </div>
+
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Unit Type</label>
+        <input type="text" name="unit" class="form-control" value="kg" placeholder="kg, piece, pair, item">
+      </div>
+    </div>
+
+    <div style="margin-bottom: 1.25rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">Description</label>
+      <textarea name="description" class="form-control" rows="2" placeholder="Service details, care instructions..."></textarea>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+      <button type="button" class="btn btn-secondary" onclick="toggleServiceForm()">Cancel</button>
+      <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save Service</button>
+    </div>
+  </form>
+</div>
+
+<!-- Services Grid -->
+<div class="grid-2">
+  {% for service in services %}
+  <div class="service-card">
+    <div class="service-icon">
+      <i class="bi {{ service.icon_name }}"></i>
+    </div>
+    <div style="flex: 1;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div style="font-weight: 600; font-size: 1.1rem;">{{ service.name }}</div>
+          <div style="font-size: 0.82rem; color: var(--text-muted);">{{ service.get_category_display }}</div>
+        </div>
+        <span class="badge {% if service.is_active %}badge-READY{% else %}badge-CANCELLED{% endif %}">
+          {% if service.is_active %}Active{% else %}Inactive{% endif %}
+        </span>
+      </div>
+
+      {% if service.description %}
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">{{ service.description }}</p>
+      {% endif %}
+
+      <div style="margin-top: 0.75rem; font-weight: 700; font-size: 1.2rem; color: #a5b4fc;">
+        ${{ service.price_per_unit }} <span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">/ {{ service.unit }}</span>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="card" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 3rem;">
+    No services added yet. Click "Add Service" to add your first laundry service!
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleServiceForm() {
+  const card = document.getElementById('createServiceCard');
+  card.style.display = card.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}
